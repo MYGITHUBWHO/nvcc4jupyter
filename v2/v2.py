@@ -3,6 +3,8 @@ import subprocess
 
 from IPython.core.magic import Magics, cell_magic, magics_class
 from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
+from IPython.config import Configurable
+from IPython.utils.traitlets import Unicode, Bool
 from common import helper
 
 compiler = '/usr/local/cuda/bin/nvcc'
@@ -10,19 +12,26 @@ compiler = '/usr/local/cuda/bin/nvcc'
 @magics_class
 class NVCCPluginV2(Magics):
 
+    static_dir   = Bool(False, config=True, help='Use static output directory')
+    relative_dir = Unicode(u'.', config=True, help='the relative_dir of source codes from current dir');
+    out          = Unicode(u'result.out', config=True, help='filename of output binary');
+
     def __init__(self, shell):
         super(NVCCPluginV2, self).__init__(shell)
         self.argparser = helper.get_argparser()
-        current_dir = os.getcwd()
-        self.output_dir = os.path.join(current_dir, 'src')
-        if not os.path.exists(self.output_dir):
-            os.mkdir(self.output_dir)
-            print(f'created output directory at {self.output_dir}')
-        else:
-            print(f'directory {self.output_dir} already exists')
 
-        self.out = os.path.join(current_dir, "result.out")
-        print(f'Out bin {self.out}')
+        if self.static_dir:
+            current_dir = os.getcwd()
+            self.output_dir = os.path.join(current_dir, self.relative_dir)
+            if not os.path.exists(self.output_dir):
+                os.mkdir(self.output_dir)
+                print(f'created output directory {self.output_dir}')
+
+            print(f'Set up cuda environment at {self.output_dir}')
+        else
+            self.output_dir = '.'
+
+        print(f'Default out bin {self.out}')
 
     @staticmethod
     def compile(output_dir, file_paths, out):
@@ -41,7 +50,7 @@ class NVCCPluginV2(Magics):
 
     @magic_arguments()
     @argument('-n', '--name', type=str, help='file name that will be produced by the cell. must end with .cu extension')
-    @argument('-c', '--compile', type=bool, help='Should be compiled?')
+    @argument('-c', '--compile', type=bool, default=False, help='Should be compiled?')
     @argument('-t', '--timeit', type=bool, default=False, help='Time the code?')
     @cell_magic
     def cuda(self, line='', cell=None):
