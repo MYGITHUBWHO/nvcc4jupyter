@@ -13,8 +13,8 @@ compiler = '/usr/local/cuda/bin/nvcc'
 class NVCCPluginV2(Magics):
 
     static_dir   = Bool(False, config=True, help='Use static output directory')
-    relative_dir = Unicode(u'.', config=True, help='the relative_dir of source codes from current dir');
-    out          = Unicode(u'result.out', config=True, help='filename of output binary');
+    relative_dir = Unicode(u'.', config=True, help='the relative_dir of source codes from current dir')
+    out          = Unicode(u'result.out', config=True, help='filename of output binary')
 
     def __init__(self, shell):
         super(NVCCPluginV2, self).__init__(shell)
@@ -28,7 +28,7 @@ class NVCCPluginV2(Magics):
                 print(f'created output directory {self.output_dir}')
 
             print(f'Set up cuda environment at {self.output_dir}')
-        else
+        else:
             self.output_dir = '.'
 
         print(f'Default out bin {self.out}')
