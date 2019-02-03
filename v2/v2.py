@@ -42,6 +42,7 @@ class NVCCPluginV2(Magics):
     @magic_arguments()
     @argument('-n', '--name', type=str, help='file name that will be produced by the cell. must end with .cu extension')
     @argument('-c', '--compile', type=bool, help='Should be compiled?')
+    @argument('-t', '--timeit', type=bool, default=False, help='Time the code?')
     @cell_magic
     def cuda(self, line='', cell=None):
         args = parse_argstring(self.cuda, line)
