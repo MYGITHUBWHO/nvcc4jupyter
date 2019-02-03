@@ -3,8 +3,8 @@ import subprocess
 
 from IPython.core.magic import Magics, cell_magic, magics_class
 from IPython.core.magic_arguments import argument, magic_arguments, parse_argstring
-from IPython.config import Configurable
-from IPython.utils.traitlets import Unicode, Bool
+from traitlets.config import Configurable
+from traitlets import Unicode, Bool
 from common import helper
 
 compiler = '/usr/local/cuda/bin/nvcc'
